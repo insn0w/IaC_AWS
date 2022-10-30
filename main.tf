@@ -76,6 +76,7 @@ resource "aws_subnet" "private_2" {
     Name = "private-2"
   }
 }
+
 # Create route table to internet gateway
 resource "aws_route_table" "project_rt" {
   vpc_id = aws_vpc.vpc.id
@@ -107,10 +108,10 @@ resource "aws_security_group" "public_sg" {
   vpc_id      = aws_vpc.vpc.id
 
   ingress {
-    from_port        = 80
-    to_port          = 80
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
+    from_port       = "80"
+    to_port         = "80"
+    protocol        = "tcp"
+    cidr_blocks       = ["0.0.0.0/0"]
   }
   ingress {
     from_port         = 22
@@ -143,7 +144,7 @@ resource "aws_security_group" "private_sg" {
     from_port         = 22
     to_port           = 22
     protocol          = "tcp"
-    cidr_blocks       = ["0.0.0.0/0"]
+    cidr_blocks       = ["10.0.0.0/16"]
   }
   egress {
     from_port        = 0
@@ -153,6 +154,7 @@ resource "aws_security_group" "private_sg" {
 
   }
 }
+
 # Security group for ALB
 resource "aws_security_group" "alb_sg" {
   name        = "alb-sg"
@@ -220,6 +222,7 @@ resource "aws_lb_listener" "listener_lb" {
     target_group_arn = aws_lb_target_group.project_tg.arn
   }
 }
+
 # Create ec2 instances
 resource "aws_instance" "web1" {
   ami           = "ami-0cff7528ff583bf9a"
@@ -263,6 +266,7 @@ resource "aws_instance" "web2" {
     Name = "web2_instance"
   }
 }
+
 # Database subnet group
 resource "aws_db_subnet_group" "db_subnet"  {
     name       = "db-subnet"
